@@ -7,7 +7,9 @@ authors = [
     { name = "SBodenhemier", email = "swb79@nau.edu" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "pydantic>=2.14.3",
+]
 
 [project.scripts]
 main = "cyb502_grad_project.main:main"
