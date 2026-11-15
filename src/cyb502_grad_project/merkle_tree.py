@@ -15,15 +15,15 @@ class MerkleTree:
         return json.dumps(data, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
     @classmethod
-    def leaf_hash(self, transaction: Transaction) -> str:
-        return sha256_hex(self.transaction_bytes(transaction))
+    def leaf_hash(cls, transaction: Transaction) -> str:
+        return sha256_hex(cls.transaction_bytes(transaction))
 
     @classmethod
-    def root(self, transactions: list[Transaction]) -> str:
+    def root(cls, transactions: list[Transaction]) -> str:
         if not transactions:
             return sha256_hex(b"")
 
-        level = [self.leaf_hash(transaction) for transaction in transactions]
+        level = [cls.leaf_hash(transaction) for transaction in transactions]
 
         while len(level) > 1:
             if len(level) % 2 == 1:
@@ -38,13 +38,13 @@ class MerkleTree:
 
     @classmethod
     def proof(
-        self, transactions: list[Transaction], transaction_index: int
+        cls, transactions: list[Transaction], transaction_index: int
     ) -> list[dict[str, str]]:
         # Return the sibling hashes needed to prove a transaction's inclusion
         if not 0 <= transaction_index < len(transactions):
             raise IndexError("Transaction index is out of range")
 
-        level = [self.leaf_hash(transaction) for transaction in transactions]
+        level = [cls.leaf_hash(transaction) for transaction in transactions]
         index = transaction_index
         proof = []
 
@@ -70,12 +70,12 @@ class MerkleTree:
 
     @classmethod
     def verify_proof(
-        self,
+        cls,
         transaction: Transaction,
         proof: list[dict[str, str]],
         expected_root: str,
     ) -> bool:
-        current_hash = self.leaf_hash(transaction)
+        current_hash = cls.leaf_hash(transaction)
 
         try:
             for step in proof:

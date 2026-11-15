@@ -20,7 +20,7 @@ class Block(BaseModel):
 
     @classmethod
     def create(
-        self,
+        cls,
         prev: Self | None = None,
         transactions: list[Transaction] | None = None,
     ) -> Self:
@@ -30,12 +30,12 @@ class Block(BaseModel):
         nonce = 0
 
         merkle_root = MerkleTree.root(transactions)
-        block_hash = self.make_hash(index, timestamp, merkle_root, prev_hash, nonce)
+        block_hash = cls.make_hash(index, timestamp, merkle_root, prev_hash, nonce)
 
-        return self(
+        return cls(
             index=index,
             timestamp=timestamp,
-            transactions=transactions,
+            transactions=[] if transactions is None else transactions,
             merkle_root=merkle_root,
             hash=block_hash,
             prev_hash=prev_hash,

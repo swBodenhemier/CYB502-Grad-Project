@@ -10,7 +10,8 @@ json_adaptor = TypeAdapter(list[Block])
 
 
 def main():
-    chain: list[Block] = []
+    # Create the chain and genesis block
+    chain: list[Block] = [Block.create()]
 
     usage = """Usage:
     (1): Create a new block
@@ -39,7 +40,7 @@ def main():
             num_transactions = int(input("    Number of transactions to generate: "))
             transactions = generate_transactions(max(num_transactions, 0))
             block = Block.create(
-                prev=None if len(chain) == 0 else chain[len(chain) - 1],
+                prev=None if len(chain) == 0 else chain[-1],
                 transactions=transactions,
             )
             chain.append(block)
@@ -65,7 +66,7 @@ def main():
 
         elif action == "4":
             print("    Validating chain...")
-            valid = chain[len(chain) - 1].validate_block(chain)
+            valid = chain[-1].validate_block(chain)
             if valid[0]:
                 print("    Chain is valid")
             else:
@@ -84,7 +85,7 @@ def main():
                 continue
             print("    Mining chain...")
             mine_chain(chain, max(difficulty, 0))
-            print(f"\n    Mining Complete with nonce: {chain[len(chain) - 1].nonce}")
+            print(f"\n    Mining Complete with nonce: {chain[-1].nonce}")
 
         elif action == "s":
             if len(chain) == 0:
